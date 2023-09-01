@@ -1,0 +1,27 @@
+name: Publish using connectors mapping
+
+on:
+  workflow_call:
+    inputs:
+      image_name:
+        required: true
+        type: string
+      tag:
+        type:string
+    secrets:
+      registry_username:
+        required: true
+      registry_password:
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # checkout code
+      - uses: actions/checkout@v3
+
+      # run metadata
+      - run: echo "This is the metadata variable"
+                
