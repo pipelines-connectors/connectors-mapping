@@ -55,7 +55,7 @@ jobs:
           repos=$(curl -L \
           -X GET \
           -H "Accept: application/json" \
-          ${connectors-endpoint}/connectors/mapping/retrieve/${type})
+          http://34.135.100.19:8080/connectors/mapping/retrieve/${type})
           echo $repos
           
           
