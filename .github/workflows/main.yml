@@ -55,7 +55,7 @@ jobs:
           repos=$(curl -L \
           -X GET \
           -H "Accept: application/json" \
-          ${connectorsEndpoint}/connectors/mapping/retrieve/${type})
+          ${connectors-endpoint}/connectors/mapping/retrieve/${type})
           echo $repos
           
           
