@@ -28,9 +28,11 @@ on:
         required: true
         type: string
     secrets:
-      registry_username:
+      cloud-access-token:
         required: false
-      registry_password:
+      github-token:
+        required: false
+      connectors-token:
         required: false
 
 jobs:
