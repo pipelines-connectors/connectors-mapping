@@ -3,10 +3,29 @@ name: Publish using connectors mapping
 on:
   workflow_call:
     inputs:
-      image_name:
+      type:
         required: true
         type: string
-      tag:
+      environment:
+        required: true
+        type: string
+      repo-location:
+        required: true
+        type: string
+      connectors-endpoint:
+        required: true
+        type: string
+      command:
+        required: true
+        type: string
+      email:                # pending to delete
+        required: true
+        type: string
+      username:             # pending to delete
+        required: true
+        type: string
+      metadata:
+        required: true
         type: string
     secrets:
       registry_username:
@@ -24,4 +43,24 @@ jobs:
 
       # run metadata
       - run: echo "This is the metadata variable"
+
+      - run: |
+          echo ${{ inputs.type }}
+          echo ${{ inputs.environment }}
+          echo ${{ inputs.repo-location }}
+          echo ${{ inputs.connectors-endpoint }}
+          echo ${{ inputs.command }}
+
+      - run: |
+          repos=$(curl -L \
+          -X GET \
+          -H "Accept: application/json" \
+          ${connectorsEndpoint}/connectors/mapping/retrieve/${type})
+          echo $repos
+          
+          
+#-X POST \
+#          -H "Accept: application/json" \
+#          ${connectorsEndpoint}/connectors/mapping/retrieve/${type} \
+#          -d '{"ref":"topic-branch","inputs":{"name":"Mona the Octocat","home":"San Francisco, CA"}}'
                 
