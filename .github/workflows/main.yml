@@ -54,7 +54,7 @@ jobs:
           echo ${{ inputs.command }}
 
       - run: |
-          repos=$(curl -s -X GET -H "Accept: application/json" http://34.135.100.19:8080/connectors/mapping/retrieve/${type})
+          repos=$(curl -s -X GET -H "Accept: application/json" "http://34.135.100.19:8080/connectors/mapping/retrieve/${type}" )
           echo $repos
           
           
