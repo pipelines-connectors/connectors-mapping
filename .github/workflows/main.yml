@@ -54,7 +54,7 @@ jobs:
           echo ${{ inputs.command }}
 
       - run: |
-          repos=$(curl -s -X GET -H "Accept: application/json" "http://34.135.100.19:8080/connectors/mapping/retrieve/app" )
+          repos=$(curl -s -X GET -H "Accept: application/json" "${{ inputs.connectors-endpoint }}:8080/connectors/mapping/retrieve/${{ inputs.type }}" )
           echo $repos
           curl -s -X POST -H "Accept: application/json" \
           "https://api.github.com/repos/yabinboxes/pulumi-cloud-run/dispatches" \
