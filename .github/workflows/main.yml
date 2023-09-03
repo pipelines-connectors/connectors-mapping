@@ -56,11 +56,9 @@ jobs:
 
       - run: |
           echo $(curl -s -X GET -H "Accept: application/json" "${{ inputs.connectors-endpoint }}/connectors/mapping/retrieve/${{ inputs.type }}" ) > output.txt
-          cat output.txt
-          
-      - run: |
+          echo output.txt
           curl -s -X POST -H "Accept: application/json" \
-          "https://api.github.com/repos/${{ inputs.username }}/${REPOS}/dispatches" \
+          "https://api.github.com/repos/${{ inputs.username }}/$(echo output.txt)/dispatches" \
           -d '{ "event_type": "build", "client_payload": { \
             "email": ${{ inputs.email }}, \
             "command": ${{ inputs.command }}, \
