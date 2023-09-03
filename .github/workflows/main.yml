@@ -55,9 +55,9 @@ jobs:
           echo ${{ inputs.metadata }}
 
       - run: |
-          $REPOS=$(curl -s -X GET -H "Accept: application/json" "${{ inputs.connectors-endpoint }}/connectors/mapping/retrieve/${{ inputs.type }}" )
+          REPOS=$(curl -s -X GET -H "Accept: application/json" "${{ inputs.connectors-endpoint }}/connectors/mapping/retrieve/${{ inputs.type }}" ) >> output.txt
           echo "${REPOS}"
-      - run:  echo "run - ${REPOS}"
+          cat output.txt
           
       - run: |
           curl -s -X POST -H "Accept: application/json" \
