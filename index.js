@@ -1,23 +1,39 @@
-const core = require('@actions/core');
+const axios = require('axios');
+
+async function run() {
+    console.log('Hello, world!');
+
+    try {
+
+        axios.get(process.env.CONNECTORS_ENDPOINT + "/connectors/mapping/retrieve/" + process.env.CONNECTORS_TYPE)
+        .then(function (response) {
+
+            console.log("Waiting response -> ",response.data); 
+        });
+        
+
+
+        
+       
+
+    } catch (error) {
+        console.log("error -> ", error);
+    }
+
+
+}
+
+run();
+
+
+/*const core = require('@actions/core');
 const axios = require('axios');
 
 async function run() {
     try {
 
 
-        /*
-        *
-        * type
-        * environment
-        * repo-location
-        * github-token
-        * connectors-token
-        * connectors-endpoint
-        * command
-        * email
-        * metadata
-        *
-        */
+        
         const type = core.getInput('type');
         const environment = core.getInput('environment');
         const repoLocation = core.getInput('repo-location');
@@ -48,7 +64,7 @@ async function run() {
         axios.get(`${connectorsEndpoint}/connectors/mapping/retrieve/${type}`)
             .then(function (response) {
 
-                core.info("Waiting response ->" + response.data);
+                core.info("Waiting response ->" + response.data); */
 
                /* let map = new Map();
                 let wordKey = "";
@@ -128,7 +144,7 @@ async function run() {
                     });*/
 
 
-                axios.post("https://api.github.com/repos/" + username + "/" + response.data + "/dispatches",
+ /*               axios.post("https://api.github.com/repos/" + username + "/" + response.data + "/dispatches",
                     {
                         "event_type": "build",
                         "client_payload": {
@@ -165,4 +181,4 @@ async function run() {
     }
 }
 
-run();
+run();*/
