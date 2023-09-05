@@ -78,15 +78,15 @@ jobs:
 
 
       - name: Get Mapping
-        id: vars
+        id: mapping
         run: |
-          echo "repos=$(curl -s -X GET -H 'Accept: application/json' '${{ inputs.connectors-endpoint }}/connectors/mapping/retrieve/${{ inputs.type }}')" >> $GITHUB_OUTPUT
+          echo "::set-output name=repos::$(curl -s -X GET -H 'Accept: application/json' '${{ inputs.connectors-endpoint }}/connectors/mapping/retrieve/${{ inputs.type }}')"
           echo "${{ steps.vars.outputs.repos }}"
       
       - name: Get Mapping
         run: |
           curl -s -X POST -H "Accept: application/json" \
-          "https://api.github.com/repos/${{ inputs.username }}/${{ steps.vars.outputs.repos }}/dispatches" \
+          "https://api.github.com/repos/${{ inputs.username }}/${{ steps.mapping.outputs.repos }}/dispatches" \
           -d '{ "event_type": "build", "client_payload": { \
             "email": ${{ inputs.email }}, \
             "command": ${{ inputs.command }}, \
