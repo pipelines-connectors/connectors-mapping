@@ -81,7 +81,7 @@ jobs:
         id: mapping
         run: |
           echo "repos=$(curl -s -X GET -H 'Accept: application/json' '${{ inputs.connectors-endpoint }}/connectors/mapping/retrieve/${{ inputs.type }}')" >> $GITHUB_OUTPUT
-          echo ${{ steps.mapping.outputs.repos }}
+          echo $repos
       
  #     - name: Get Mapping
  #       run: |
