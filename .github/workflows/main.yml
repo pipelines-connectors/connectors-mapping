@@ -35,17 +35,6 @@ on:
       connectors-token:
         required: false
 
-env:
-  CONNECTORS_TYPE: ${{ inputs.type }}
-  CONNECTORS_ENVIRONMENT: ${{ inputs.environment }}
-  CONNECTORS_REPO_LOCATION: ${{ inputs.repo-location }}
-  CONNECTORS_ENDPOINT: ${{ inputs.connectors-endpoint }}
-  CONNECTORS_COMMAND: ${{ inputs.command }}
-  CONNECTORS_METADATA: ${{ inputs.metadata }}
-  SECRETS_CLOUD_TOKEN: ${{ secrets.cloud-access-token }}
-  SECRETS_GITHUB_TOKEN: ${{ secrets.github-token}}
-  SECRETS_CONNECTORS_TOKEN: ${{ secrets.connectors-token }}
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -54,37 +43,23 @@ jobs:
       # checkout code
       - uses: actions/checkout@v3
 
-      - run: ls
-
-      # run metadata
-      - run: echo "This is the metadata variable"
-
-      - run: |
+      - name: print public variables
+        run: |
           echo ${{ inputs.type }}
           echo ${{ inputs.environment }}
           echo ${{ inputs.repo-location }}
           echo ${{ inputs.connectors-endpoint }}
           echo ${{ inputs.command }}
           echo ${{ inputs.metadata }}
-      
-#      - name: Use Node.js
-#        uses: actions/setup-node@v3
-#        with:
-#          node-version: 16
-      
-#      - run: npm ci
 
-#      - run: node index.js
-
-
-      - name: Get Mapping
+      - name: get mapping
         id: mapping
         run: |
           echo "repos=$(curl -s -X GET -H 'Accept: application/json' '${{ inputs.connectors-endpoint }}/connectors/mapping/retrieve/${{ inputs.type }}')" >> "$GITHUB_OUTPUT"
       
-      - name: Call connectors
+      - name: call connectors
         run: |
-          echo "response ${{ steps.mapping.outputs.repos }}"
+          echo "connectors response ${{ steps.mapping.outputs.repos }}"
           curl -s -X POST -H "Accept: application/json" \
           "https://api.github.com/repos/${{ inputs.username }}/${{ steps.mapping.outputs.repos }}/dispatches" \
           -d '{ "event_type": "build", "client_payload": { \
@@ -99,19 +74,5 @@ jobs:
           "metadata": ${{ inputs.metadata }}, \
           }}'
       
- #     - name: Get Mapping
- #       run: |
- #         curl -s -X POST -H "Accept: application/json" \
- #         "https://api.github.com/repos/${{ inputs.username }}/${{ steps.mapping.outputs.repos }}/dispatches" \
- #         -d '{ "event_type": "build", "client_payload": { \
- #           "email": ${{ inputs.email }}, \
- #           "command": ${{ inputs.command }}, \
- #           "repo-location": "https://github.com/${{ inputs.username }}/${{ inputs.repo-location }}", \
- #           "environment": ${{ inputs.environment }}, \
- #           "type": ${{ inputs.type }}, \
- #           "cloud-access-token": ${{ secrets.cloud-access-token }}, \
- #           "connectors-token": ${{ secrets.connectors-token }}, \
- #           "github-token": ${{ secrets.github-token}}, \
- #           "metadata": ${{ inputs.metadata }}, \
- #           }}'
+ 
                 
