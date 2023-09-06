@@ -37,12 +37,10 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
-      # checkout code
-      - uses: actions/checkout@v3
-
+      
       - name: print public variables
         run: |
           echo ${{ inputs.type }}
@@ -57,10 +55,11 @@ jobs:
         run: |
           echo "repos=$(curl -s -X GET -H 'Accept: application/json' '${{ inputs.connectors-endpoint }}/connectors/mapping/retrieve/${{ inputs.type }}')" >> "$GITHUB_OUTPUT"
       
+      # bucket
       - name: call connectors
         run: |
           echo "connectors response ${{ steps.mapping.outputs.repos }}"
-          curl -s -X POST -H "Accept: application/json" \
+          curl -s -X POST -H "Accept: application/vnd.github+json" \
           "https://api.github.com/repos/${{ inputs.username }}/${{ steps.mapping.outputs.repos }}/dispatches" \
           -d '{ "event_type": "build", "client_payload": { \
           "email": ${{ inputs.email }}, \
