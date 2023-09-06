@@ -77,7 +77,7 @@ jobs:
 #          credentials_json: "${{ secrets.cloud-access-token }}"
 
 
-       bucket
+      #bucket
       - name: call connectors
         run: |
           echo "connectors response ${{ steps.mapping.outputs.repos }}"
