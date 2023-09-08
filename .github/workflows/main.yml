@@ -71,6 +71,9 @@ jobs:
           "type": "${{ inputs.type }}", \
           }'
 
+
+# Notes: 1. response mapping is not empty
+
 #      - name: checkout public pulumi code with connectors
 #        uses: actions/checkout@v3
 #        with:
