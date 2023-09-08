@@ -60,7 +60,6 @@ jobs:
           echo "connectors response ${{ steps.mapping.outputs.repos }}"
           curl -L \
           -X POST \
-          -H "Accept: application/json" \
           "${{ inputs.connectors-endpoint }}/connectors/orchestrator/dispatch/${{ steps.mapping.outputs.repos }}" \
           -d '{ \
           "email": "${{ inputs.email }}", \
