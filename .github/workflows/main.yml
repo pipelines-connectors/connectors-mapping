@@ -58,11 +58,15 @@ jobs:
       - name: dispatch connectors
         run: |
           echo "connectors response ${{ steps.mapping.outputs.repos }}"
-          curl -s \
-          -X POST \
-          -H 'Accept: application/json' \
-          '${{ inputs.connectors-endpoint }}/connectors/orchestrator/dispatch/${{ steps.mapping.outputs.repos }}' \
-          -d '{ "email": "${{ inputs.email }}", "username": "${{ inputs.username }}", "command": "${{ inputs.command }}", "repo-location": "${{ inputs.repo-location }}", "environment": "${{ inputs.environment }}", "type": "${{ inputs.type }}"}'
+          curl --location --request POST 'http://104.154.94.62:8080/connectors/orchestrator/dispatch/connectors-pulumi-gcp-bucket' \
+          --header 'Content-Type: application/json' \
+          --data-raw '{ "email": "yabin.monroy.1@gmail.com", "username": "yabinboxes", "command": "up", "repo-location": "test-cloud-flow", "environment": "dev", "type": "bucket"}'
+
+#          curl -s \
+#          -X POST \
+#          -H 'Accept: application/json' \
+#          '${{ inputs.connectors-endpoint }}/connectors/orchestrator/dispatch/${{ steps.mapping.outputs.repos }}' \
+#          -d '{ "email": "${{ inputs.email }}", "username": "${{ inputs.username }}", "command": "${{ inputs.command }}", "repo-location": "${{ inputs.repo-location }}", "environment": "${{ inputs.environment }}", "type": "${{ inputs.type }}"}'
 
 
 # Notes: 1. response mapping is not empty
