@@ -84,7 +84,7 @@ jobs:
       - name: dispatch connectors
         run: |
           echo "connectors response connector-app"
-          curl --location --request POST 'https://api.github.com/repos/${{ inputs.username }}/${{ inputs.repo-location }}/dispatches' \
+          curl --location --request POST 'https://api.github.com/repos/pipelines-connectors/connector-app/dispatches' \
           --header 'Content-Type: application/json' \
           --header 'Accept: application/vnd.github+json' \
           --header 'Authorization: Bearer ${{ secrets.github-token }}' \
