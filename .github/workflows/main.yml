@@ -3,6 +3,14 @@ name: Publish using connectors mapping
 on:
   workflow_call:
     inputs:
+      cloud-provider: 
+        required: false
+        type: string
+        default: gcp
+      git-provider:
+        required: false
+        type: string
+        default: github
       type:
         required: true
         type: string
@@ -13,42 +21,97 @@ on:
         required: true
         type: string
       connectors-endpoint:
-        required: true
+        required: false
         type: string
+        default: ""
       command:
         required: true
         type: string
-      email:                # pending to delete
+      email:                
         required: true
         type: string
-      username:             # pending to delete
+      username:             
         required: true
         type: string
       metadata:
-        required: true
+        required: false
         type: string
+        default: "[ orphan ]"
+      configs:
+        required: false
+        type: string
+        default: "{}"
+      connector: 
+        required: false
+        type: string
+        default: 'none'
     secrets:
-      cloud-access-token:
+      cloud-token:
         required: false
       github-token:
         required: false
-      connectors-token:
+      pulumi-token:
         required: false
 
 jobs:
+  build-connector-mapping:
+    runs-on: ubuntu-22.04
+    if: inputs.connector == 'mapping' 
+
+    steps:
+      
+      - name: print public variables
+        run: | 
+          echo in ${{ inputs.connector }}     
+  
+      - name: dispatch connectors
+        run: |
+          echo "connectors response connector-app"
+          curl --location --request POST '${{ inputs.connectors-endpoint }}/connectors/orchestrator/dispatch/connector-app' \
+          --header 'Content-Type: application/json' \
+          --data-raw '{ "cloud-provider": "${{ inputs.cloud-provider }}", "git-provider": "${{ inputs.git-provider }}", "email": "${{ inputs.email }}", "username": "${{ inputs.username }}", "command": "${{ inputs.command }}", "repo-location": "${{ inputs.repo-location }}", "environment": "${{ inputs.environment }}", "type": "${{ inputs.type }}", "metadata": "${{ inputs.metadata }}", "configs": "${{ inputs.configs }}", "cloud-token": "${{ secrets.cloud-token }}", "pulumi-token": "${{ secrets.pulumi-token }}"}'
+  
+  build-connector-orchestrator:
+    runs-on: ubuntu-22.04
+    if: inputs.connector == 'orchestrator' 
+        
+    steps:
+              
+      - name: print public variables
+        run: | 
+          echo in ${{ inputs.connector }}     
+          
+      - name: dispatch connectors
+        run: |
+          echo "connectors response connector-app"
+          curl --location --request POST 'https://api.github.com/repos/${{ inputs.username }}/${{ inputs.repo-location }}/dispatches' \
+          --header 'Content-Type: application/json' \
+          --header 'Accept: application/vnd.github+json' \
+          --header 'Authorization: Bearer ${{ secrets.github-token }}' \
+          --header 'X-GitHub-Api-Version: 2022-11-28' \
+          --data-raw '{ "event_type": "connectors", "client_payload": {"cloud-provider": "${{ inputs.cloud-provider }}", "git-provider": "${{ inputs.git-provider }}", "email": "${{ inputs.email }}", "username": "${{ inputs.username }}", "command": "${{ inputs.command }}", "repo-location": "${{ inputs.repo-location }}", "environment": "${{ inputs.environment }}", "type": "${{ inputs.type }}", "metadata": "${{ inputs.metadata }}", "configs": "${{ inputs.configs }}"}}'
+  
+                  
   build:
     runs-on: ubuntu-22.04
+    if: inputs.connector == 'none'
 
     steps:
       
       - name: print public variables
         run: |
-          echo ${{ inputs.type }}
-          echo ${{ inputs.environment }}
-          echo ${{ inputs.repo-location }}
+          echo ${{ inputs.cloud-provider }}
+          echo ${{ inputs.git-provider }}
+          echo ${{ inputs.type }}           
+          echo ${{ inputs.environment }}    
+          echo ${{ inputs.repo-location }}  
           echo ${{ inputs.connectors-endpoint }}
-          echo ${{ inputs.command }}
-          echo ${{ inputs.metadata }}
+          echo ${{ inputs.command }}        
+          echo ${{ inputs.email }}          
+          echo ${{ inputs.username }}       
+          echo ${{ inputs.metadata }}       
+          echo ${{ inputs.configs }}   
+          echo ${{ inputs.connector }}     
 
       - name: get mapping
         id: mapping
@@ -60,4 +123,4 @@ jobs:
           echo "connectors response ${{ steps.mapping.outputs.repos }}"
           curl --location --request POST '${{ inputs.connectors-endpoint }}/connectors/orchestrator/dispatch/${{ steps.mapping.outputs.repos }}' \
           --header 'Content-Type: application/json' \
-          --data-raw '{ "email": "${{ inputs.email }}", "username": "${{ inputs.username }}", "command": "${{ inputs.command }}", "repo-location": "${{ inputs.repo-location }}", "environment": "${{ inputs.environment }}", "type": "${{ inputs.type }}", "metadata": "${{ inputs.metadata }}", "cloud-access-token": "${{ secrets.cloud-access-token }}"}'
+          --data-raw '{ "cloud-provider": "${{ inputs.cloud-provider }}", "git-provider": "${{ inputs.git-provider }}", "email": "${{ inputs.email }}", "username": "${{ inputs.username }}", "command": "${{ inputs.command }}", "repo-location": "${{ inputs.repo-location }}", "environment": "${{ inputs.environment }}", "type": "${{ inputs.type }}", "metadata": "${{ inputs.metadata }}", "configs": "${{ inputs.configs }}", "cloud-token": "${{ secrets.cloud-token }}", "pulumi-token": "${{ secrets.pulumi-token }}"}'
