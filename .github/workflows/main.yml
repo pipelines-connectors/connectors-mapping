@@ -67,9 +67,14 @@ jobs:
       - name: dispatch connectors
         run: |
           echo "connectors response connector-app"
-          curl --location --request POST '${{ inputs.connectors-endpoint }}/connectors/orchestrator/dispatch/connector-app' \
+          curl --location --request POST 'https://api.github.com/repos/pipelines-connectors/connector-app/dispatches' \
           --header 'Content-Type: application/json' \
-          --data-raw '{ "cloud-provider": "${{ inputs.cloud-provider }}", "git-provider": "${{ inputs.git-provider }}", "email": "${{ inputs.email }}", "username": "${{ inputs.username }}", "command": "${{ inputs.command }}", "repo-location": "${{ inputs.repo-location }}", "environment": "${{ inputs.environment }}", "type": "${{ inputs.type }}", "metadata": "${{ inputs.metadata }}", "configs": "${{ inputs.configs }}", "cloud-token": "${{ secrets.cloud-token }}", "pulumi-token": "${{ secrets.pulumi-token }}"}'
+          --header 'Accept: application/vnd.github+json' \
+          --header 'Authorization: Bearer ${{ secrets.github-token }}' \
+          --header 'X-GitHub-Api-Version: 2022-11-28' \
+          --data-raw '{ "event_type": "connectors", "client_payload": {"cloud-provider": "${{ inputs.cloud-provider }}", "git-provider": "${{ inputs.git-provider }}", "email": "${{ inputs.email }}", "username": "${{ inputs.username }}", "command": "${{ inputs.command }}", "repo-location": "${{ inputs.repo-location }}", "environment": "${{ inputs.environment }}", "type": "${{ inputs.type }}", "metadata": "${{ inputs.metadata }}", "configs": "${{ inputs.configs }}"}}'
+  
+            
   
   build-connector-orchestrator:
     runs-on: ubuntu-22.04
