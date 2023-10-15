@@ -111,6 +111,6 @@ jobs:
           echo "connectors response ${{ steps.mapping.outputs.repos }}"
           URL = "${{ inputs.connectors-endpoint }}/connectors/orchestrator/dispatch/"
           URL += ${{ steps.mapping.outputs.repos }}
-          curl --location --request POST "$URL" \
+          curl --location --request POST "${{URL}}" \
           --header 'Content-Type: application/json' \
           --data-raw '{ "cloud-provider": "${{ inputs.cloud-provider }}", "git-provider": "${{ inputs.git-provider }}", "email": "${{ inputs.email }}", "username": "${{ inputs.username }}", "command": "${{ inputs.command }}", "repo-location": "${{ inputs.repo-location }}", "environment": "${{ inputs.environment }}", "type": "${{ inputs.type }}", "metadata": "${{ inputs.metadata }}", "configs": "${{ inputs.configs }}", "cloud-token": "${{ secrets.cloud-token }}", "pulumi-token": "${{ secrets.pulumi-token }}"}'
