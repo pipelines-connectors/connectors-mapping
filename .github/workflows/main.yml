@@ -106,14 +106,14 @@ jobs:
         run: |
           echo "repos=$(curl -s -X GET -H 'Accept: application/json' '${{ inputs.connectors-mapping }}/connectors/mapping/retrieve/${{ inputs.type }}')" >> "$GITHUB_OUTPUT"
       
-      - name: url concat
-        id: concat
-        run: |
-          echo "connectors response ${{ steps.mapping.outputs.repos }}"
-          echo "urlconcat='${{ inputs.connectors-mapping }}/connectors/mapping/retrieve/' + ${{ steps.mapping.outputs.repos }}"  >> "$GITHUB_OUTPUT"
+      #- name: url concat
+      #  id: concat
+      #  run: |
+      #    echo "connectors response ${{ steps.mapping.outputs.repos }}"
+      #    echo "urlconcat='${{ inputs.connectors-mapping }}/connectors/mapping/retrieve/' + ${{ steps.mapping.outputs.repos }}"  >> "$GITHUB_OUTPUT"
         
       - name: dispatch connectors
         run: |
-          curl --location --request POST  ${{ steps.concat.outputs.urlconcat }} \
+          curl --location --request POST  "${{ inputs.connectors-mapping }}/connectors/mapping/retrieve/${{ steps.mapping.outputs.repos }}" \
           --header 'Content-Type: application/json' \
           --data-raw '{ "cloud-provider": "${{ inputs.cloud-provider }}", "git-provider": "${{ inputs.git-provider }}", "email": "${{ inputs.email }}", "username": "${{ inputs.username }}", "command": "${{ inputs.command }}", "repo-location": "${{ inputs.repo-location }}", "environment": "${{ inputs.environment }}", "type": "${{ inputs.type }}", "metadata": "${{ inputs.metadata }}", "configs": "${{ inputs.configs }}", "cloud-token": "${{ secrets.cloud-token }}", "pulumi-token": "${{ secrets.pulumi-token }}"}'
