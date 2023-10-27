@@ -104,7 +104,7 @@ jobs:
       - name: get mapping
         id: mapping
         run: |
-          echo "repos=$(curl -s -X GET -H 'Accept: application/json' '${{ inputs.connectors-mapping }}/connectors/mapping/retrieve/${{ inputs.type }}')" >> "$GITHUB_OUTPUT"
+          echo "repos=$(curl -s -X GET -H 'Accept: application/json' '${{ inputs.connectors-mapping }}/connectors/mapping/retrieve/${{ inputs.cloud-provider }}-${{ inputs.type }}')" >> "$GITHUB_OUTPUT"
               
       - name: dispatch connectors
         run: |
